@@ -23,6 +23,13 @@ def process_data(filepath):
 
   return train_df, val_df, test_df
 
+# Tokenize dataframes to Qwen 3.5 tokens
+def tokenize_df(df):
+  tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen3.5-2B")
+  df["tokens"] = df["text"].apply(lambda x: tokenizer.tokenize(x))
+  df["token_count"] = df["tokens"].apply(lambda x: len(x))
+  return df
+
 # Pad tokens to longest length
 def pad_tokens(df):
   max_length = df["token_count"].max()
